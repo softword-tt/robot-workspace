@@ -3,16 +3,12 @@ clear;
 %       theta    d        a        alpha     offset
 % L1=Link([0       2        0   0      0     ]); %定义连杆的D-H参数
 % L2=Link([pi/2       0        0     pi/2         1     ]);
-% % L3=Link([0       2         0    0     0     ]);
-% 
-% L(1) = Link([0,0,0,0,0]);
-% L(2) = Link([0,4,0,0,1]);
-% L(3) = Link([pi/2,0.5,0,pi/2,0]);
-% L(4) = Link([0,0.145,3,pi/2]);
+% L3=Link([0       2         0    0     0     ]);
+
 L(1) = Link([0,0,0,0,0]);
 L(2) = Link([0,4,0,0,1]);
 L(3) = Link([0,0,0,pi/2,0]);
-L(4) = Link([pi/6,0,3,0]);
+L(4) = Link([pi/6,0,2,0]);
 L(1).qlim=[-pi,pi];
 L(2).qlim=[2,4];
 L(3).qlim=[-pi/2,pi/2];
@@ -42,20 +38,17 @@ theta3=(limitmin_3+(limitmax_3-limitmin_3)*rand(N,1))*pi/180; %关节3限制
 theta4=(limitmin_4+(limitmax_4-limitmin_4)*rand(N,1))*pi/180; %关节4限制
 
 
-% for n=1:1:3000
-% qq=[theta1(n),theta2(n),theta3(n),theta4(n)];
-% four_arm.plot(qq);%动画显示
-% Mricx=four_arm.fkine(qq);
-% plot3(Mricx.t(1),Mricx.t(2),Mricx.t(3),'b.','MarkerSize',0.5);%画出落点
-% hold on;
-% % drawnow;
-% % F = getframe(gcf);
-% % im = frame2im(F);
-% % [I,map] = rgb2ind(im,256);
-% %     %写入 GIF89a 格式文件   
-% %     if n == 1
-% %         imwrite(I,map,'test.gif','GIF', 'Loopcount',inf,'DelayTime',0.1);
-% %     else
-% %         imwrite(I,map,'test.gif','GIF','WriteMode','append','DelayTime',0.1);
-% %     end   
-% end
+qq=[theta1,theta2,theta3,theta4];
+
+Mricx=four_arm.fkine(qq);
+X=zeros(N,1);
+Y=zeros(N,1);
+Z=zeros(N,1);
+for n=1:1:N
+    X(n)=Mricx(n).t(1);
+    Y(n)=Mricx(n).t(2);
+    Z(n)=Mricx(n).t(3);
+
+end
+plot3(X,Y,Z,'b.','MarkerSize',0.5);%画出落点
+hold on;
