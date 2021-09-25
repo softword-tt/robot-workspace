@@ -1,0 +1,61 @@
+clc;
+clear;
+%       theta    d        a        alpha     offset
+% L1=Link([0       2        0   0      0     ]); %定义连杆的D-H参数
+% L2=Link([pi/2       0        0     pi/2         1     ]);
+% % L3=Link([0       2         0    0     0     ]);
+% 
+% L(1) = Link([0,0,0,0,0]);
+% L(2) = Link([0,4,0,0,1]);
+% L(3) = Link([pi/2,0.5,0,pi/2,0]);
+% L(4) = Link([0,0.145,3,pi/2]);
+L(1) = Link([0,0,0,0,0]);
+L(2) = Link([0,4,0,0,1]);
+L(3) = Link([0,0,0,pi/2,0]);
+L(4) = Link([pi/6,0,3,0]);
+L(1).qlim=[-pi,pi];
+L(2).qlim=[2,4];
+L(3).qlim=[-pi/2,pi/2];
+L(4).qlim=[-pi,pi];
+base=[ 1 0 0 0;0 1 0 0;0 0 1 0;0 0 0 1];
+
+four_arm = SerialLink(L,'name','fourarm','base',base);
+
+teach(four_arm); 
+four_arm.plot([0 0 pi/3 0])
+hold on;
+N=30000;    %随机次数
+
+    %关节角度限制
+limitmax_1 = -180;
+limitmin_1 = 180.0;
+limitmax_2 = 2;
+limitmin_2 = 4;
+limitmax_3 = -90.0;
+limitmin_3 = 90.0;
+limitmax_4 = -180.0;
+limitmin_4 = 180.0;
+
+theta1=(limitmin_1+(limitmax_1-limitmin_1)*rand(N,1))*pi/180; %关节1限制
+theta2=(limitmin_2+(limitmax_2-limitmin_2)*rand(N,1)); %关节2限制
+theta3=(limitmin_3+(limitmax_3-limitmin_3)*rand(N,1))*pi/180; %关节3限制
+theta4=(limitmin_4+(limitmax_4-limitmin_4)*rand(N,1))*pi/180; %关节4限制
+
+
+% for n=1:1:3000
+% qq=[theta1(n),theta2(n),theta3(n),theta4(n)];
+% four_arm.plot(qq);%动画显示
+% Mricx=four_arm.fkine(qq);
+% plot3(Mricx.t(1),Mricx.t(2),Mricx.t(3),'b.','MarkerSize',0.5);%画出落点
+% hold on;
+% % drawnow;
+% % F = getframe(gcf);
+% % im = frame2im(F);
+% % [I,map] = rgb2ind(im,256);
+% %     %写入 GIF89a 格式文件   
+% %     if n == 1
+% %         imwrite(I,map,'test.gif','GIF', 'Loopcount',inf,'DelayTime',0.1);
+% %     else
+% %         imwrite(I,map,'test.gif','GIF','WriteMode','append','DelayTime',0.1);
+% %     end   
+% end
